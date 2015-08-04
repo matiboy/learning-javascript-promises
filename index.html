@@ -10,267 +10,31 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.13.0/ui-bootstrap-tpls.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
     <script src="app.js"></script>
+    <link href="app.css" rel="stylesheet"></link>
   </head>
-  <body ng-app="Remote">
-    {% raw %}
-    <div ng-controller="ChannelsController">
-      <tabset>
-        <tab>
-          <tab-heading>Channels</tab-heading>
-          <div class="container">
-            <div class="row">
-              <div class="col-xs-6">
-                <button ng-click="previousChannel()" class="btn btn-sm btn-success">Previous</button>
-              </div>
-              <div class="col-xs-6">
-                <button ng-click="nextChannel()" class="btn btn-sm btn-success">Next</button>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-xs-12">
-                <select ng-model="list.currentList" ng-change="changeList(c)" ng-options="c as c.name for c in lists"></select>
-              </div>
-            </div>
-            <div class="row" style="overflow-y: scroll; -webkit-overflow-scrolling: touch;">
-              <div class="col-xs-6 col-sm-4 col-md-3" ng-repeat="channel in channels" ng-click="changeChannel($index)" style="margin-top: 15px; padding-left: 10px">
-                <img ng-style="{'border': channel.number === current ? 'solid 1px orange' : ''}" ng-src="http://astro.com.my/whats-on/logoimages/ChannelLogo/Pos/{{channel.number}}_120.png"><br><span ng-bind="channel.currentlyPlaying" style="margin-left: 10px; font-weight: bold;"></span><br><span ng-bind="channel.upNext + ' (' + channel.nextTime + ')'" style="margin-left: 10px;"></span>
-              </div>
+  <body ng-app="SmashBoard">
+    <div class="container">
+      <div class="jumbotron">
+        <h1>SmashBoard</h1>
+        <p>Promises, promises, not only words...</p>
+      </div>
+      <div class="row">
+        <div class="col-xs-6">
+          <div class="panel panel-success" ng-controller="TvController">
+            <div class="panel-heading">Now playing on satellite TV</div>
+            <div class="panel-body" ng-if="!channels.length">I'm not sure boss</div>
+            <div class="panel-body" ng-if="channels.length">
+              <ul>
+                <li ng-repeat="c in channels">
+                  <h3 ng-bind="c.name"></h3>
+                  <p>Channel #<span ng-bind="c.service_id"></span></p>
+                </li>
+              </ul>
             </div>
           </div>
-        </tab>
-        <tab ng-controller="ButtonsController">
-          <tab-heading>Buttons</tab-heading>
-          <div class="container" style="text-align: center;">
-            <tabset type="pills">
-              <tab>
-                <tab-heading>Astro</tab-heading>
-                <div class="row" style="margin-bottom: 10px">
-                  <div class="col-xs-3">
-                    <button class="btn btn-lg btn-success" ng-click="press('astro', 'KEY_BACK')">Back</button>
-                  </div>
-                  <div class="col-xs-6">
-                    <button class="btn btn-lg btn-danger" style="font-size: 40px;" ng-click="shutdown()"><i class="fa fa-power-off"></i></button>
-                  </div>
-                  <div class="col-xs-3">
-                    <button class="btn btn-lg btn-success" ng-click="press('astro', 'KEY_OK')">OK</button>
-                  </div>
-                </div>
-                <div class="row" style="margin-bottom: 10px">
-                  <div class="col-xs-6">
-                    <button class="btn btn-lg btn-success" ng-click="press('astro', 'KEY_CHANNELUP')"><i class="fa fa-arrow-up"></i></button>
-                  </div>
-                  <div class="col-xs-6">
-                    <button class="btn btn-lg btn-success" ng-click="press('astro', 'KEY_CHANNELDOWN')"><i class="fa fa-arrow-down"></i></button>
-                  </div>
-                </div>
-                <div class="row" style="margin-bottom: 10px">
-                  <div class="hidden-xs col-sm-3">
-                    <button class="btn btn-lg btn-default" ng-click="volumeseveraltimes('DOWN', 5)"><i class="fa fa-volume-down">&times; 5</i></button>
-                  </div>
-                  <div class="col-xs-4 col-sm-2">
-                    <button class="btn btn-lg btn-default" ng-click="press('sharptv', 'KEY_VOLUMEDOWN')"><i class="fa fa-volume-down"></i></button>
-                  </div>
-                  <div class="col-xs-4 col-sm-2">
-                    <button class="btn btn-lg btn-default" ng-click="press('sharptv', 'KEY_MUTE')"><i class="fa fa-volume-off"></i></button>
-                  </div>
-                  <div class="col-xs-4 col-sm-2">
-                    <button class="btn btn-lg btn-default" ng-click="press('sharptv', 'KEY_VOLUMEUP')"><i class="fa fa-volume-up"></i></button>
-                  </div>
-                  <div class="hidden-xs col-sm-3">
-                    <button class="btn btn-lg btn-default" ng-click="volumeseveraltimes('UP', 5)"><i class="fa fa-volume-up">&times; 5</i></button>
-                  </div>
-                </div>
-                <div class="row" style="margin-bottom: 10px">
-                  <div class="col-xs-3">
-                    <button class="btn btn-lg btn-info" ng-click="press('astro', 'KEY_REWIND')"><i class="fa fa-backward"></i></button>
-                  </div>
-                  <div class="col-xs-3">
-                    <button class="btn btn-lg btn-info" ng-click="press('astro', 'KEY_PLAY')"><i class="fa fa-play"></i></button>
-                  </div>
-                  <div class="col-xs-3">
-                    <button class="btn btn-lg btn-info" ng-click="press('astro', 'KEY_PLAYPAUSE')"><i class="fa fa-pause"></i></button>
-                  </div>
-                  <div class="col-xs-3">
-                    <button class="btn btn-lg btn-info" ng-click="press('astro', 'KEY_FASTFORWARD')"><i class="fa fa-forward"></i></button>
-                  </div>
-                </div>
-                <div class="row" style="margin-bottom: 10px">
-                  <div class="col-xs-3">
-                    <button class="btn btn-lg btn-info" ng-click="press('astro', 'KEY_LEFT')"><i class="fa fa-chevron-circle-left"></i></button>
-                  </div>
-                  <div class="col-xs-3">
-                    <button class="btn btn-lg btn-info" ng-click="press('astro', 'KEY_UP')"><i class="fa fa-chevron-circle-up"></i></button>
-                  </div>
-                  <div class="col-xs-3">
-                    <button class="btn btn-lg btn-info" ng-click="press('astro', 'KEY_DOWN')"><i class="fa fa-chevron-circle-down"></i></button>
-                  </div>
-                  <div class="col-xs-3">
-                    <button class="btn btn-lg btn-info" ng-click="press('astro', 'KEY_RIGHT')"><i class="fa fa-chevron-circle-right"></i></button>
-                  </div>
-                </div>
-                <div class="row" style="margin-bottom: 10px">
-                  <div class="col-xs-4">
-                    <button class="btn btn-lg btn-default" ng-click="press('astro', 'KEY_1')">1</button>
-                  </div>
-                  <div class="col-xs-4">
-                    <button class="btn btn-lg btn-default" ng-click="press('astro', 'KEY_2')">2</button>
-                  </div>
-                  <div class="col-xs-4">
-                    <button class="btn btn-lg btn-default" ng-click="press('astro', 'KEY_3')">3</button>
-                  </div>
-                  <div class="col-xs-4">
-                    <button class="btn btn-lg btn-default" ng-click="press('astro', 'KEY_4')">4</button>
-                  </div>
-                  <div class="col-xs-4">
-                    <button class="btn btn-lg btn-default" ng-click="press('astro', 'KEY_5')">5</button>
-                  </div>
-                  <div class="col-xs-4">
-                    <button class="btn btn-lg btn-default" ng-click="press('astro', 'KEY_6')">6</button>
-                  </div>
-                  <div class="col-xs-4">
-                    <button class="btn btn-lg btn-default" ng-click="press('astro', 'KEY_7')">7</button>
-                  </div>
-                  <div class="col-xs-4">
-                    <button class="btn btn-lg btn-default" ng-click="press('astro', 'KEY_8')">8</button>
-                  </div>
-                  <div class="col-xs-4">
-                    <button class="btn btn-lg btn-default" ng-click="press('astro', 'KEY_9')">9</button>
-                  </div>
-                  <div class="col-xs-4 col-xs-offset-4">
-                    <button class="btn btn-lg btn-default" ng-click="press('astro', 'KEY_0')">0</button>
-                  </div>
-                <div class="row" style="margin-bottom: 10px">
-                  <div class="col-xs-6">
-                    <button class="btn btn-lg btn-danger" ng-click="press('astro', 'KEY_POWER')"><i class="fa fa-power-off"></i> Astro</button>
-                  </div>
-                  <div class="col-xs-6">
-                    <button class="btn btn-lg btn-danger" ng-click="press('tv', 'KEY_POWER')"><i class="fa fa-power-off"></i> TV</button>
-                  </div>
-                </div>
-                </div>
-              </tab>
-              <tab>
-                <tab-heading>TV</tab-heading>
-                <div class="row" style="margin-bottom: 10px">
-                  <div class="col-xs-12">
-                    <button class="btn btn-lg btn-danger" ng-click="press('sharptv', 'KEY_POWER')"><i class="fa fa-power-off"></i></button>
-                  </div>
-                </div>
-                <div class="row" style="margin-bottom: 10px">
-                  <div class="col-xs-4">
-                    <button class="btn btn-lg btn-default" ng-click="press('sharptv', 'KEY_VOLUMEDOWN')"><i class="fa fa-volume-down"></i></button>
-                  </div>
-                  <div class="col-xs-4">
-                    <button class="btn btn-lg btn-default" ng-click="press('sharptv', 'KEY_MUTE')"><i class="fa fa-volume-off"></i></button>
-                  </div>
-                  <div class="col-xs-4">
-                    <button class="btn btn-lg btn-default" ng-click="press('sharptv', 'KEY_VOLUMEUP')"><i class="fa fa-volume-up"></i></button>
-                  </div>
-                </div>
-                <div class="row" style="margin-bottom: 10px">
-                  <div class="col-xs-3">
-                    <button class="btn btn-lg btn-info" ng-click="press('tv', 'KEY_LEFT')"><i class="fa fa-chevron-circle-left"></i></button>
-                  </div>
-                  <div class="col-xs-3">
-                    <button class="btn btn-lg btn-info" ng-click="press('tv', 'KEY_UP')"><i class="fa fa-chevron-circle-up"></i></button>
-                  </div>
-                  <div class="col-xs-3">
-                    <button class="btn btn-lg btn-info" ng-click="press('tv', 'KEY_DOWN')"><i class="fa fa-chevron-circle-down"></i></button>
-                  </div>
-                  <div class="col-xs-3">
-                    <button class="btn btn-lg btn-info" ng-click="press('tv', 'KEY_RIGHT')"><i class="fa fa-chevron-circle-right"></i></button>
-                  </div>
-                </div>
-                <div class="row" style="margin-bottom: 10px">
-                  <div class="col-xs-6">
-                    <button class="btn btn-lg btn-info" ng-click="press('tv', 'KEY_KATAKANA')">Input</button>
-                  </div>
-                  <div class="col-xs-6">
-                    <button class="btn btn-lg btn-info" ng-click="press('tv', 'KEY_ENTER')">Enter</button>
-                  </div>
-                </div>
-                <div class="row" style="margin-bottom: 10px">
-                  <div class="col-xs-12">
-                    <button class="btn btn-lg btn-success" ng-click="switchSource('astro')">Show Astro</button>
-                  </div>
-                </div>
-                <div class="row" style="margin-bottom: 10px">
-                  <div class="col-xs-12">
-                    <button class="btn btn-lg btn-success" ng-click="switchSource('chromecast')">Show Chromecast</button>
-                  </div>
-                </div>
-              </tab>
-            </tabset>
-          </div>
-        </tab>
-        <!-- <tab ng-controller="ListsController">
-          <tab-heading>Lists</tab-heading>
-          <h2>Create</h2>
-            <input ng-model="newlist.name" placeholder="List name">
-            <input ng-model="newlist.channels" placeholder="411 511 832">
-            <button class="btn btn-sm" ng-click="createList()">Create</button>
-          <h2>Lists</h2>
-          <ul class="list-unstyled">
-            <li ng-repeat="list in lists">
-              <button ng-click="removeList($index)" class="btn btn-danger btn-xs" style="display: inline-block">Remove</button> {{list.name}}: {{list.channels.join(' ')}}
-            </li>
-          </ul>
-        </tab> -->
-        <tab>
-          <tab-heading>Fans</tab-heading>
-          <h2>Living room</h2>
-          <div class="row">
-            <div class="col-xs-2">
-              <button class="btn btn-sm btn-default" ng-click="press('fans', 'KEY_0')">Off</button>
-            </div>
-            <div class="col-xs-2">
-              <button class="btn btn-sm btn-default" ng-click="press('fans', 'KEY_1')">1</button>
-            </div>
-            <div class="col-xs-2">
-              <button class="btn btn-sm btn-default" ng-click="press('fans', 'KEY_2')">2</button>
-            </div>
-            <div class="col-xs-2">
-              <button class="btn btn-sm btn-default" ng-click="press('fans', 'KEY_3')">3</button>
-            </div>
-            <div class="col-xs-2">
-              <button class="btn btn-sm btn-default" ng-click="press('fans', 'KEY_4')">4</button>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-xs-5">
-              Power:
-              <select ng-model="fan.power">
-                <option value="0">0</option>
-                <option value="0">1</option>
-                <option value="0">2</option>
-                <option value="0">3</option>
-                <option value="0">4</option>
-              </select>
-            </div>
-            <div class="col-xs-5">
-              Light:
-              <select ng-model="fan.light">
-                <option value="0">0</option>
-                <option value="0">1</option>
-                <option value="0">2</option>
-                <option value="0">3</option>
-                <option value="0">4</option>
-              </select>
-            </div>
-            <div class="col-xs-2">
-              <button class="btn btn-sm btn-default" ng-click="sendFan('livingroom')">Send</button>
-            </div>
-          </div>
-        </tab>
-        <tab disable="true" disabled="true">
-          <tab-heading>
-            <button class="btn btn-small btn-danger" style="font-size: 14px;" ng-click="shutdown()"><i class="fa fa-power-off"></i></button>
-            <button class="btn btn-small btn-default" style="font-size: 14px;" ng-click="press('sharptv', 'KEY_MUTE')"><i class="fa fa-volume-off"></i></button>
-            <button class="btn btn-sm btn-success hidden-xs" ng-click="switchSource('chromecast')">Show Chromecast</button>
-          </tab-heading>
-        </tab>
-      </tabset>
+        </div>
+        <div class="col-xs-6"></div>
+      </div>
     </div>
-    {% endraw %}
   </body>
 </html>
