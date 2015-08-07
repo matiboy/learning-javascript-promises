@@ -22,6 +22,9 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
   }
 });
 
+document.addEventListener("DOMContentLoaded", function(event) {
+});
+
 document.addEventListener('DOMContentLoaded', function() {
   var input = document.getElementById('say-what');
   var output = document.getElementById('status');
