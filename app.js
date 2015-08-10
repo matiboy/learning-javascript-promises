@@ -22,6 +22,9 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
   };
 });
 document.addEventListener("DOMContentLoaded", function(event) {
+
+});
+document.addEventListener("DOMContentLoaded", function(event) {
   var click = document.getElementById('click-me');
   var last = document.getElementById('last');
   click.addEventListener('mousedown', function() {
