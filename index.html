@@ -30,6 +30,19 @@
             </div>
           </div>
         </div>
+        <div class="col-xs-6" ng-controller="RepositoriesController">
+          <div class="panel panel-success">
+            <div class="panel-heading">Github repositories</div>
+            <div class="panel-body">
+              <p>Username: <input ng-model="username" /><button class="btn btn-info" ng-click="getUserRepos()">Go</button></p>
+              <p>Repositories:
+                <ul>
+                  <li ng-repeat="repo in repositories" ng-bind="repo"></li>
+                </ul>
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="row">
         <div class="col-xs-6">
