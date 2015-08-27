@@ -19,6 +19,28 @@
         <p>Promises, promises, not only words...</p>
       </div>
       <div class="row">
+        <div class="col-xs-6" ng-controller="GithubRepoAvailabilityController">
+          <div class="panel panel-success">
+            <div class="panel-heading">Check Github repo availability</div>
+            <div class="panel-body">
+              <p>Username: <input ng-model="username" /></p>
+              <p>Repository: <input ng-model="repository" /><button class="btn btn-info" ng-click="checkRepoAvailability()">Go</button>
+              <p>
+                <span ng-bind="status"></span>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-6">
+          <div class="panel panel-success">
+            <div class="panel-heading"></div>
+            <div class="panel-body">
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
         <div class="col-xs-6" ng-controller="WeatherForecastController">
           <div class="panel panel-success">
             <div class="panel-heading">Weather forecast</div>
