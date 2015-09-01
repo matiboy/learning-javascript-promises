@@ -27,6 +27,16 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
       })
   }
 })
+/*
+People in space API
+http://api.open-notify.org/astros.json?callback=JSON_CALLBACK
+
+ISS position API
+http://api.open-notify.org/iss-now.json?callback=JSON_CALLBACK
+
+More information about pass times:
+http://open-notify.org/Open-Notify-API/ISS-Pass-Times/
+*/
 .controller('GithubRepoAvailabilityController', function($scope, GithubService) {
   $scope.checkRepoAvailability = function() {
     GithubService.checkRepoAvailability($scope.username, $scope.repository)
@@ -107,9 +117,24 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
     }).then(function(response){
         $scope.weather = response.data[0].WeatherText;
         $scope.temperature = response.data[0].Temperature.Metric.Value;
-    }).catch(function(message) {
-      window.alert(message);
     });
+})
+.controller('RepositoriesController', function($scope, GithubService) {
+    $scope.getUserRepos = function() {
+        GithubService.getRepoNames($scope.username).then(function(names) {
+            $scope.repositories = names;
+        });
+    };
+})
+.controller('GithubRepoAvailabilityController', function($scope, GithubService) {
+    $scope.checkRepoAvailability = function() {
+        $scope.status = 'Checking';
+        GithubService.checkRepoAvailability($scope.username, $scope.repository).then(function(status) {
+            $scope.status = status;
+        }, function(reason) {
+            $scope.status = 'An error has occurred: ' + reason;
+        });
+    };
 })
 .controller('LocationController', function($scope, LocationService){
   LocationService.getGeolocation().then(function geolocationReceived(geoposition) {
