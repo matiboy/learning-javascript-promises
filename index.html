@@ -9,6 +9,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.0/lodash.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.13.0/ui-bootstrap-tpls.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
     <script src="app.js"></script>
     <link href="app.css" rel="stylesheet"></link>
   </head>
@@ -17,6 +18,19 @@
       <div class="jumbotron">
         <h1>SmashBoard</h1>
         <p>Promises, promises, not only words...</p>
+      </div>
+      <div class="row">
+        <div class="col-xs-12" ng-controller="VideoPlayerController">
+          <div class="panel panel-success">
+            <div class="panel-heading">Video player</div>
+            <div class="panel-body">
+              <div id="twitch_embed_player"></div>
+              <ul>
+                <li ng-repeat="s in status" ng-bind="s"></li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="row">
         <div class="col-xs-6" ng-controller="GithubRepoAvailabilityController">

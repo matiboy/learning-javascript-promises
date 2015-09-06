@@ -41,17 +41,13 @@ http://open-notify.org/Open-Notify-API/ISS-Pass-Times/
     $scope.iss = {};
     var peoplePromise = $http.jsonp('http://api.open-notify.org/astros.json?callback=JSON_CALLBACK');
     var positionPromise = $http.jsonp('http://api.open-notify.org/iss-now.json?callback=JSON_CALLBACK');
-
-    peoplePromise.then(function(response){
-        console.log('People loaded');
+    peoplePromise.then(function(response) {
         $scope.iss.people = response.data.people;
     });
 
     positionPromise.then(function(response) {
-        console.log('Position loaded');
         $scope.iss.latlng = response.data.iss_position;
     });
-    console.debug('This will always appear first');
 })
 .controller('GithubRepoAvailabilityController', function($scope, GithubService) {
   $scope.checkRepoAvailability = function() {
