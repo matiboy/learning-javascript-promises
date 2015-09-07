@@ -20,6 +20,20 @@
         <p>Promises, promises, not only words...</p>
       </div>
       <div class="row">
+        <div class="col-xs-6" ng-controller="ITunesController">
+          <div class="panel panel-success">
+            <div class="panel-heading">iTunes search</div>
+            <div class="panel-body">
+              <p>Search term: <input ng-model="searchTerm"><button ng-click="check()" class="btn btn-success">Go</button>
+              </p>
+              <ul>
+                <li ng-repeat="result in results">
+                  <img ng-src="{{result.artworkUrl100}}"> <span ng-bind="result.trackName"></span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
         <div class="col-xs-6" ng-controller="LoadtimeController">
           <div class="panel panel-success">
             <div class="panel-heading">API load time</div>
