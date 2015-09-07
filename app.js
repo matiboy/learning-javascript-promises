@@ -46,7 +46,7 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
     });
   }
 })
-.factory('ITunesService', function($http) {
+.factory('ITunesService', function($http, $q) {
   var cachedResults = {};
   return {
     search: function(searchTerm) {
@@ -56,6 +56,31 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
         });
     }
   }
+})
+.controller('TodoController', function($scope, TodoService) {
+  $scope.todos = TodoService.load();
+  $scope.add = function() {
+    $scope.todos.push($scope.what);
+    TodoService.add($scope.what);
+  };
+  $scope.clear = TodoService.clear;
+})
+.factory('TodoService', function($q) {
+  var service =  {
+    add: function(todo) {
+      var todos = service.load();
+      todos.push(todo);
+      localStorage.setItem('todos', JSON.stringify(todos));
+    },
+    clear: function() {
+      localStorage.delItem('todos');
+    },
+    load: function() {
+      return JSON.parse(localStorage.getItem('todos')) || [];
+    }
+  };
+  return service;
+
 })
 .controller('VideoPlayerController', function($scope, $q, $http) {
     var playerLoading = $q.defer();

@@ -34,6 +34,23 @@
             </div>
           </div>
         </div>
+        <div class="col-xs-6" ng-controller="TodoController">
+          <div class="panel panel-success">
+            <div class="panel-heading">Todo list</div>
+            <div class="panel-body">
+              <p>
+                <input ng-model="what">
+                <button ng-click="add()" class="btn btn-success">Add</button>
+                <button ng-click="clear()" class="btn btn-warning">Clear</button>
+              </p>
+              <ul>
+                <li ng-repeat="todo in todos" ng-bind="todo"></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
         <div class="col-xs-6" ng-controller="LoadtimeController">
           <div class="panel panel-success">
             <div class="panel-heading">API load time</div>
