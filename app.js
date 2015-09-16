@@ -39,6 +39,14 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
         $scope.average = duration / $scope.times;
     });
 })
+.controller('RaceController', function($scope) {
+  var car1 = document.getElementById('car1');
+  var car2 = document.getElementById('car2');
+  var car3 = document.getElementById('car3');
+  var distance = document.getElementById('racetrack').scrollWidth - 121;
+  var result = document.getElementById('result');
+  var resultCar = document.getElementById('resultCar');
+})
 .controller('ITunesController', function($scope, ITunesService) {
   $scope.check = function() {
     ITunesService.search($scope.searchTerm).then(function(results) {

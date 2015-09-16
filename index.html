@@ -20,6 +20,26 @@
         <p>Promises, promises, not only words...</p>
       </div>
       <div class="row">
+        <div class="col-xs-12">
+          <div class="panel panel-success">
+            <div class="panel-heading">Race to the finish line!</div>
+            <div class="panel-body" ng-controller="RaceController">
+              <p><button ng-click="start()" class="btn btn-success">Go</button>
+              </p>
+              <div id="racetrack">
+                <div class="racecar" id="car1"></div>
+                <div class="racecar" id="car2"></div>
+                <div class="racecar" id="car3"></div>
+                <div id="result">
+                  <p>Winner: </p>
+                  <img id="resultCar" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
         <div class="col-xs-6" ng-controller="ITunesController">
           <div class="panel panel-success">
             <div class="panel-heading">iTunes search</div>
