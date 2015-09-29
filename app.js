@@ -5,6 +5,6 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
   ajaxPromise.then(function weGotData(response) {
     $scope.channels = response.data.events;
   });
-}).controller('LocationController', function() {
+}).controller('LocationController', function($scope) {
 
 });
