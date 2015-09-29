@@ -33,7 +33,19 @@
             </div>
           </div>
         </div>
-        <div class="col-xs-6"></div>
+        <div class="col-xs-6">
+          <div class="panel panel-success" ng-controller="LocationController">
+            <div class="panel-heading">Location</div>
+            <div class="panel-body">
+              <p>
+                <b>Latitude:</b> <span ng-bind="coordinates.latitude">
+              </p>
+              <p>
+                <b>Longitude:</b> <span ng-bind="coordinates.longitude">
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </body>
