@@ -5,6 +5,19 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
   ajaxPromise.then(function weGotData(response) {
     $scope.channels = response.data.events;
   });
-}).controller('LocationController', function($scope) {
+}).controller('LocationController', function($scope, LocationService) {
+  LocationService.getGeolocation().then(function(geoposition) {
+    $scope.coordinates = geoposition.coords;
+  });
+}).factory('LocationService', function($q) {
+  return {
+    getGeolocation: function() {
+      var getGeo = $q.defer();
+      window.navigator.geolocation.getCurrentPosition(function(geo){
+        getGeo.resolve(geo);
+      });
 
+      return getGeo.promise;
+    }
+  }
 });
