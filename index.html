@@ -20,6 +20,17 @@
       </div>
       <div class="row">
         <div class="col-xs-6">
+          <div class="panel panel-success">
+            <div class="panel-heading">Talk to me</div>
+            <div class="panel-body">
+              <input id="say-what">
+              <p>Status: <span id="status"></span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-6">
           <div class="panel panel-success" ng-controller="TvController">
             <div class="panel-heading">Now playing on satellite TV</div>
             <div class="panel-body" ng-if="!channels.length">I'm not sure boss</div>
