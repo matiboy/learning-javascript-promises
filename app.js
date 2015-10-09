@@ -28,15 +28,31 @@ document.addEventListener('DOMContentLoaded', function() {
   input.addEventListener('blur', function(){
     console.debug('Exited input');
     var speaking = new Promise(function executor(success, failure){
-      var duration = Math.random()*10000;
-      setTimeout(function(){
-        success({
-          elapsedTime: duration
-        });
-      }, duration);
+      // var duration = Math.random()*10000;
+      // setTimeout(function(){
+      //   success({
+      //     elapsedTime: duration
+      //   });
+      // }, duration);
+      var msg = new SpeechSynthesisUtterance(input.value);
+      msg.onend = success;
+      speechSynthesis.speak(msg);
+    });
+    output.innerText = 'Speaking';
+    speaking.then(function(event) {
+      console.debug(event);
+      output.innerText = 'Speech completed in '+event.elapsedTime/1000+ ' seconds';
     });
   });
 });
+
+
+
+
+
+
+
+
 
 
 
