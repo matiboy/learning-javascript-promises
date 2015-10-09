@@ -21,3 +21,28 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
     }
   }
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+  var input = document.getElementById('say-what');
+  var output = document.getElementById('status');
+  input.addEventListener('blur', function(){
+    console.debug('Exited input');
+    var speaking = new Promise(function executor(success, failure){
+      var duration = Math.random()*10000;
+      setTimeout(function(){
+        success({
+          elapsedTime: duration
+        });
+      }, duration);
+    });
+  });
+});
+
+
+
+
+
+
+
+
+
