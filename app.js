@@ -5,34 +5,51 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
   ajaxPromise.then(function weGotData(response) {
     $scope.channels = response.data.events;
   });
-}).controller('LocationController', function($scope, LocationService) {
-  LocationService.getGeolocation().then(function(geoposition) {
+})
+.controller('LocationController', function($scope, LocationService){
+  LocationService.getGeolocation().then(function geolocationReceived(geoposition) {
     $scope.coordinates = geoposition.coords;
   });
 }).factory('LocationService', function($q) {
   return {
     getGeolocation: function() {
       var getGeo = $q.defer();
-      window.navigator.geolocation.getCurrentPosition(function(geo){
+      window.navigator.geolocation.getCurrentPosition(function(geo) {
         getGeo.resolve(geo);
       });
-
       return getGeo.promise;
     }
-  }
+  };
 });
-
 document.addEventListener("DOMContentLoaded", function(event) {
-});
+  var click = document.getElementById('click-me');
+  var last = document.getElementById('last');
+  click.addEventListener('mousedown', function() {
+    var clicking = new Promise(function executor(resolve, reject) {
+      var start = new Date();
+      click.onmouseout = reject;
 
-document.addEventListener('DOMContentLoaded', function() {
+      click.onmouseup = function() {
+        console.debug('Mouse out');
+        resolve(new Date() - start);
+      }
+    });
+
+    clicking.then(function(duration) {
+      last.innerText = (duration/1000) + ' seconds';
+    }, function(message) {
+      window.alert('Challenge incomplete');
+    })
+  })
+});
+document.addEventListener("DOMContentLoaded", function(event) {
   var input = document.getElementById('say-what');
   var output = document.getElementById('status');
-  input.addEventListener('blur', function(){
+  input.addEventListener('blur', function() {
     console.debug('Exited input');
-    var speaking = new Promise(function executor(success, failure){
-      // var duration = Math.random()*10000;
-      // setTimeout(function(){
+    var speaking = new Promise(function executor(success, failure) {
+      // var duration = Math.random() * 10000;
+      // setTimeout(function() {
       //   success({
       //     elapsedTime: duration
       //   });
@@ -48,20 +65,3 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
