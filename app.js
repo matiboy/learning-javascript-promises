@@ -12,7 +12,7 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
   }).catch(function(){
     $scope.coordinates = {latitude: 'N/A', longitude: 'N/A'};
   }).finally(function(){
-    window.alert('Location done');
+    // window.alert('Location done');
   });
 }).factory('LocationService', function($q) {
   return {
@@ -20,20 +20,20 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
       var q = $q.defer();
       window.navigator.geolocation.getCurrentPosition(function(geo) {
         q.resolve(geo);
-      }, function(positionError){
-        console.debug(arguments);
-        q.reject();
-      });
+      }, q.reject);
       return q.promise;
     }
   };
+});
+document.addEventListener("DOMContentLoaded", function(event) {
+
 });
 document.addEventListener("DOMContentLoaded", function(event) {
   var charging = document.getElementById('charging');
   var level = document.getElementById('battery-level');
 
   navigator.getBattery().then(function(batteryManager) {
-    console.log(batteryManager);
+    // console.log(batteryManager);
     charging.innerText = batteryManager.charging  ? 'Yes' : 'No';
     level.innerText = (batteryManager.level * 100)+'%';
     level.className = 'fa fa-battery-' + Math.round(batteryManager.level * 4);
