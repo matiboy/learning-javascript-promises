@@ -22,7 +22,15 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
   };
 });
 document.addEventListener("DOMContentLoaded", function(event) {
+  var charging = document.getElementById('charging');
+  var level = document.getElementById('battery-level');
 
+  navigator.getBattery().then(function(batteryManager) {
+    console.log(batteryManager);
+    charging.innerText = batteryManager.charging  ? 'Yes' : 'No';
+    level.innerText = (batteryManager.level * 100)+'%';
+    level.className = 'fa fa-battery-' + Math.round(batteryManager.level * 4);
+  })
 });
 document.addEventListener("DOMContentLoaded", function(event) {
   var click = document.getElementById('click-me');
