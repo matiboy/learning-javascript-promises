@@ -9,15 +9,22 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
 .controller('LocationController', function($scope, LocationService){
   LocationService.getGeolocation().then(function geolocationReceived(geoposition) {
     $scope.coordinates = geoposition.coords;
+  }).catch(function(){
+    $scope.coordinates = {latitude: 'N/A', longitude: 'N/A'};
+  }).finally(function(){
+    window.alert('Location done');
   });
 }).factory('LocationService', function($q) {
   return {
     getGeolocation: function() {
-      var getGeo = $q.defer();
+      var q = $q.defer();
       window.navigator.geolocation.getCurrentPosition(function(geo) {
-        getGeo.resolve(geo);
+        q.resolve(geo);
+      }, function(positionError){
+        console.debug(arguments);
+        q.reject();
       });
-      return getGeo.promise;
+      return q.promise;
     }
   };
 });
