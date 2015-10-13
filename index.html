@@ -19,6 +19,19 @@
         <p>Promises, promises, not only words...</p>
       </div>
       <div class="row">
+        <div class="col-xs-6" ng-controller="WeatherForecastController">
+          <div class="panel panel-success">
+            <div class="panel-heading">Weather forecast</div>
+            <div class="panel-body">
+              <p>Latlng: <span ng-bind="latlng"></span></p>
+              <p>City: <span ng-bind="city"></span></p>
+              <p>Weather: <span ng-bind="weather"></span></p>
+              <p>Temperature: <span ng-bind="temperature"></span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
         <div class="col-xs-6">
           <div class="panel panel-success">
             <div class="panel-heading">Location</div>

@@ -1,5 +1,4 @@
 
-
 var geolocationPromise;
 function getGeolocation() {
   if(!geolocationPromise) {
@@ -13,7 +12,6 @@ function getGeolocation() {
   return geolocationPromise;
 }
 
-
 angular.module('SmashBoard', []).controller('TvController', function($scope, $http) {
   var now = Math.floor(new Date().getTime() / 1000);
   var url = 'http://redape.cloudapp.net/tvguidea/singleslot/'+now+'?channels=[1,159,63,64]&format=json&o=1'
@@ -21,6 +19,16 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
   ajaxPromise.then(function weGotData(response) {
     $scope.channels = response.data.events;
   });
+})
+.controller('WeatherForecastController', function($scope, $http, LocationService){
+  /* URLs for the APIs:
+  -> Google Geocode
+  var url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+geo.coords.latitude+','+geo.coords.longitude;
+  -> AccuWeather city to id
+  var url = 'http://apidev.accuweather.com/locations/v1/search?apikey=meSocYcloNe&q='+city
+  -> AccuWeather id to forecast
+  var url = 'http://apidev.accuweather.com/currentconditions/v1/'+result.Key+'.json?language=en&apikey=meSocYcloNe'
+  */
 })
 .controller('LocationController', function($scope, LocationService){
   LocationService.getGeolocation().then(function geolocationReceived(geoposition) {
