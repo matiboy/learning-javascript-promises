@@ -4,7 +4,6 @@ function getGeolocation() {
   if(!geolocationPromise) {
     geolocationPromise = new Promise(function(resolve, reject){
       navigator.geolocation.getCurrentPosition(function(geo) {
-        console.debug('Get geolocation received');
         resolve(geo);
       }, reject);
     });
@@ -29,6 +28,23 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
   -> AccuWeather id to forecast
   var url = 'http://apidev.accuweather.com/currentconditions/v1/'+result.Key+'.json?language=en&apikey=meSocYcloNe'
   */
+  LocationService.getGeolocation().then(function(geo) {
+    $scope.latlng = geo.coords.latitude + ', ' + geo.coords.longitude;
+    var url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+geo.coords.latitude+','+geo.coords.longitude;
+    $http.get(url).then(function(response) {
+      var data = response.data;
+      var result = data.results[0];
+      var components = result.address_components;
+      var query = [];
+      for(var c in components) {
+        c = components[c];
+        if(c && c.types.indexOf('locality') !== -1 || c.types.indexOf('country') !== -1) {
+          query.push(c.long_name);
+        }
+      }
+      $scope.city = query.join(', ');
+    });
+  });
 })
 .controller('LocationController', function($scope, LocationService){
   LocationService.getGeolocation().then(function geolocationReceived(geoposition) {
@@ -48,7 +64,6 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
 document.addEventListener("DOMContentLoaded", function(event) {
   var address = document.getElementById('address');
   getGeolocation().then(function(geolocation){
-    console.log('Using geolocation promise in location widget')
     var url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='
       +geolocation.coords.latitude + ','
       +geolocation.coords.longitude;
@@ -95,8 +110,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
     myPromise.then(function(data) {
       var result = data[0];
       var duration = data[1];
-      console.log(result, duration);
-      console.debug('Call completed before key press');
       if(result) {
         city.innerText = result.formatted_address;
         document.getElementById('load-time').innerText = duration/1000 + 's';
@@ -109,7 +122,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
   var level = document.getElementById('battery-level');
 
   navigator.getBattery().then(function(batteryManager) {
-    // console.log(batteryManager);
     charging.innerText = batteryManager.charging  ? 'Yes' : 'No';
     level.innerText = (batteryManager.level * 100)+'%';
     level.className = 'fa fa-battery-' + Math.round(batteryManager.level * 4);
@@ -124,7 +136,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
       click.onmouseout = reject;
 
       click.onmouseup = function() {
-        console.debug('Mouse out');
         resolve(new Date() - start);
       }
     });
@@ -140,7 +151,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
   var input = document.getElementById('say-what');
   var output = document.getElementById('status');
   input.addEventListener('blur', function() {
-    console.debug('Exited input');
     var speaking = new Promise(function executor(success, failure) {
       // var duration = Math.random() * 10000;
       // setTimeout(function() {
@@ -154,7 +164,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
     });
     output.innerText = 'Speaking';
     speaking.then(function(event) {
-      console.debug(event);
       output.innerText = 'Speech completed in '+event.elapsedTime/1000+ ' seconds';
     });
   });
