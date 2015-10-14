@@ -28,23 +28,35 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
   -> AccuWeather id to forecast
   var url = 'http://apidev.accuweather.com/currentconditions/v1/'+result.Key+'.json?language=en&apikey=meSocYcloNe'
   */
-  LocationService.getGeolocation().then(function(geo) {
-    $scope.latlng = geo.coords.latitude + ', ' + geo.coords.longitude;
-    var url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+geo.coords.latitude+','+geo.coords.longitude;
-    $http.get(url).then(function(response) {
-      var data = response.data;
-      var result = data.results[0];
-      var components = result.address_components;
-      var query = [];
-      for(var c in components) {
-        c = components[c];
-        if(c && c.types.indexOf('locality') !== -1 || c.types.indexOf('country') !== -1) {
-          query.push(c.long_name);
+  LocationService.getGeolocation()
+    .then(function(geo) {
+        $scope.latlng = geo.coords.latitude + ', ' + geo.coords.longitude;
+        var url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+geo.coords.latitude+','+geo.coords.longitude;
+        return $http.get(url);
+    })
+    .then(function(response) {
+        var data = response.data;
+        var result = data.results[0];
+        var components = result.address_components;
+        var query = [];
+        for(var c in components) {
+            c = components[c];
+            if(c && c.types.indexOf('locality') !== -1 || c.types.indexOf('country') !== -1) {
+                query.push(c.long_name);
+            }
         }
-      }
-      $scope.city = query.join(', ');
+        $scope.city = query.join(', ');
+        var city = query.join(',');
+        var url = 'http://apidev.accuweather.com/locations/v1/search?apikey=meSocYcloNe&q='+city;
+        return $http.get(url)
+    }).then(function(response) {
+        var result = response.data[0];
+        var url = 'http://apidev.accuweather.com/currentconditions/v1/'+result.Key+'.json?language=en&apikey=meSocYcloNe';
+        return $http.get(url);
+    }).then(function(response){
+        $scope.weather = response.data[0].WeatherText;
+        $scope.temperature = response.data[0].Temperature.Metric.Value;
     });
-  });
 })
 .controller('LocationController', function($scope, LocationService){
   LocationService.getGeolocation().then(function geolocationReceived(geoposition) {
