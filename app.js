@@ -1,3 +1,55 @@
+
+
+var promiseA = new Promise(function(resolve, reject) {
+  resolve('I ve been resolved');
+  reject('I ve changed my mind, I am now rejected');
+});
+
+
+var promiseB = new Promise(function(resolve, reject) {
+  reject('I ve been rejected');
+  resolve('I ve chagned my mind, I am now resolved');
+});
+
+var promiseC = new Promise(function(resolve, reject) {
+  resolve(42, 'anything');
+  resolve(50, 'anything else');
+});
+
+
+promiseA.then(
+  function(){
+    console.log(arguments);
+  },
+  function() {
+    console.error(arguments);
+  }
+);
+
+
+promiseB.then(
+  function(){
+    console.log(arguments);
+  },
+  function() {
+    console.error(arguments);
+  }
+);
+
+
+promiseC.then(
+  function(){
+    console.log(arguments);
+  },
+  function() {
+    console.error(arguments);
+  }
+);
+
+
+
+
+
 angular.module('SmashBoard', []).controller('TvController', function($scope, $http) {
   var now = Math.floor(new Date().getTime() / 1000);
   var url = 'http://redape.cloudapp.net/tvguidea/singleslot/'+now+'?channels=[1,159,63,64]&format=json&o=1'
