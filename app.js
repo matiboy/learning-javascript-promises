@@ -17,34 +17,34 @@ var promiseC = new Promise(function(resolve, reject) {
 });
 
 
-promiseA.then(
-  function(){
-    console.log(arguments);
-  },
-  function() {
-    console.error(arguments);
-  }
-);
+// promiseA.then(
+//   function(){
+//     console.log(arguments);
+//   },
+//   function() {
+//     console.error(arguments);
+//   }
+// );
 
 
-promiseB.then(
-  function(){
-    console.log(arguments);
-  },
-  function() {
-    console.error(arguments);
-  }
-);
+// promiseB.then(
+//   function(){
+//     console.log(arguments);
+//   },
+//   function() {
+//     console.error(arguments);
+//   }
+// );
 
 
-promiseC.then(
-  function(){
-    console.log(arguments);
-  },
-  function() {
-    console.error(arguments);
-  }
-);
+// promiseC.then(
+//   function(){
+//     console.log(arguments);
+//   },
+//   function() {
+//     console.error(arguments);
+//   }
+// );
 
 
 
@@ -78,7 +78,36 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
   };
 });
 document.addEventListener("DOMContentLoaded", function(event) {
+  var input = document.getElementById('city-input');
+  var city = document.getElementById('city-name');
+  var rejectFunction;
+  input.addEventListener('keyup', function() {
+    if(rejectFunction) {
+      rejectFunction();
+    }
+    var myPromise = new Promise(function(resolve, reject){
+      rejectFunction = reject;
+      var start = new Date();
+      var client = new XMLHttpRequest();
+      client.onload = function() {
+        resolve([JSON.parse(this.response).results[0], new Date() - start]);
+      }
+      var url = 'https://maps.googleapis.com/maps/api/geocode/json?address='+input.value+'&sensor=false';
+      client.open('GET', url);
+      client.send();
+    });
 
+    myPromise.then(function(data) {
+      var result = data[0];
+      var duration = data[1];
+      console.log(result, duration);
+      console.debug('Call completed before key press');
+      if(result) {
+        city.innerText = result.formatted_address;
+        document.getElementById('load-time').innerText = duration/1000 + 's';
+      }
+    })
+  })
 });
 document.addEventListener("DOMContentLoaded", function(event) {
   var charging = document.getElementById('charging');
