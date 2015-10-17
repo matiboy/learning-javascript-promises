@@ -1,28 +1,13 @@
 
 
-var promiseA = new Promise(function(resolve, reject) {
-  var randomTime = Math.random() * 3000;
-  setTimeout(resolve, randomTime);
-});
-
-
-var promiseB = new Promise(function(resolve, reject) {
-  var randomTime = Math.random() * 3000;
-  setTimeout(reject, randomTime);
-});
-
-var promiseC = new Promise(function(resolve, reject) {
-  resolve(42, 'anything');
-  resolve(50, 'anything else');
-});
-
-
-
 var geolocationPromise;
 function getGeolocation() {
   if(!geolocationPromise) {
     geolocationPromise = new Promise(function(resolve, reject){
-      navigator.geolocation.getCurrentPosition(resolve, reject);
+      navigator.geolocation.getCurrentPosition(function(geo) {
+        console.debug('Get geolocation received');
+        resolve(geo);
+      }, reject);
     });
   }
   return geolocationPromise;
@@ -53,7 +38,23 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
   };
 });
 document.addEventListener("DOMContentLoaded", function(event) {
+  var address = document.getElementById('address');
+  getGeolocation().then(function(geolocation){
+    console.log('Using geolocation promise in location widget')
+    var url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='
+      +geolocation.coords.latitude + ','
+      +geolocation.coords.longitude;
 
+    var client = new XMLHttpRequest();
+    client.onload = function() {
+      address.innerText = JSON.parse(this.response).results[0].formatted_address;
+    }
+    client.open('GET', url);
+    client.send();
+
+  }).catch(function(){
+    address.innerText = 'N/A';
+  })
 });
 document.addEventListener("DOMContentLoaded", function(event) {
   var input = document.getElementById('city-input');
@@ -66,13 +67,21 @@ document.addEventListener("DOMContentLoaded", function(event) {
     var myPromise = new Promise(function(resolve, reject){
       rejectFunction = reject;
       var start = new Date();
-      var client = new XMLHttpRequest();
-      client.onload = function() {
-        resolve([JSON.parse(this.response).results[0], new Date() - start]);
-      }
-      var url = 'https://maps.googleapis.com/maps/api/geocode/json?address='+input.value+'&sensor=false';
-      client.open('GET', url);
-      client.send();
+      getGeolocation().then(function(geolocation) {
+        var client = new XMLHttpRequest();
+        client.onload = function() {
+          resolve([JSON.parse(this.response).results[0], new Date() - start]);
+        }
+        var coords = geolocation.coords;
+        var bounds = (coords.latitude -0.1) + ',' + (coords.longitude -0.1) + '|' + (coords.latitude +0.1) + ',' + (coords.longitude +0.1);
+
+        var url = 'https://maps.googleapis.com/maps/api/geocode/json?address='
+          +input.value+'&sensor=false'
+          +'&bounds='+bounds;
+        client.open('GET', url);
+        client.send();
+      })
+
     });
 
     myPromise.then(function(data) {
