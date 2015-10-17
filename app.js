@@ -1,14 +1,14 @@
 
 
 var promiseA = new Promise(function(resolve, reject) {
-  resolve('I ve been resolved');
-  reject('I ve changed my mind, I am now rejected');
+  var randomTime = Math.random() * 3000;
+  setTimeout(resolve, randomTime);
 });
 
 
 var promiseB = new Promise(function(resolve, reject) {
-  reject('I ve been rejected');
-  resolve('I ve chagned my mind, I am now resolved');
+  var randomTime = Math.random() * 3000;
+  setTimeout(reject, randomTime);
 });
 
 var promiseC = new Promise(function(resolve, reject) {
@@ -17,37 +17,16 @@ var promiseC = new Promise(function(resolve, reject) {
 });
 
 
-// promiseA.then(
-//   function(){
-//     console.log(arguments);
-//   },
-//   function() {
-//     console.error(arguments);
-//   }
-// );
 
-
-// promiseB.then(
-//   function(){
-//     console.log(arguments);
-//   },
-//   function() {
-//     console.error(arguments);
-//   }
-// );
-
-
-// promiseC.then(
-//   function(){
-//     console.log(arguments);
-//   },
-//   function() {
-//     console.error(arguments);
-//   }
-// );
-
-
-
+var geolocationPromise;
+function getGeolocation() {
+  if(!geolocationPromise) {
+    geolocationPromise = new Promise(function(resolve, reject){
+      navigator.geolocation.getCurrentPosition(resolve, reject);
+    });
+  }
+  return geolocationPromise;
+}
 
 
 angular.module('SmashBoard', []).controller('TvController', function($scope, $http) {
@@ -61,21 +40,20 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
 .controller('LocationController', function($scope, LocationService){
   LocationService.getGeolocation().then(function geolocationReceived(geoposition) {
     $scope.coordinates = geoposition.coords;
+    $scope.$digest();
   }).catch(function(){
     $scope.coordinates = {latitude: 'N/A', longitude: 'N/A'};
-  }).finally(function(){
-    // window.alert('Location done');
+    $scope.$digest();
   });
 }).factory('LocationService', function($q) {
   return {
     getGeolocation: function() {
-      var q = $q.defer();
-      window.navigator.geolocation.getCurrentPosition(function(geo) {
-        q.resolve(geo);
-      }, q.reject);
-      return q.promise;
+      return getGeolocation();
     }
   };
+});
+document.addEventListener("DOMContentLoaded", function(event) {
+
 });
 document.addEventListener("DOMContentLoaded", function(event) {
   var input = document.getElementById('city-input');
