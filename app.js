@@ -57,21 +57,13 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
   */
   LocationService.getGeolocation()
     .then(function(geo) {
-      return {
-        coords: {
-          latitude: 0,
-          longitude: 0
-        }
-      }
-    })
-    .then(function(geo) {
         $scope.latlng = geo.coords.latitude + ', ' + geo.coords.longitude;
         var url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+geo.coords.latitude+','+geo.coords.longitude;
         return $http.get(url);
     })
     .then(function(response) {
       if(response.data.status === 'ZERO_RESULTS') {
-        throw 'Error: no good';
+        return $q.reject('No results');
       }
         var data = response.data;
         var result = data.results[0];
