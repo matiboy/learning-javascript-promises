@@ -19,6 +19,33 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
     $scope.channels = response.data.events;
   });
 })
+.controller('RepositoriesController', function($scope, GithubService) {
+  $scope.getUserRepos = function() {
+    GithubService.getRepoNames($scope.username)
+      .then(function(repoNames) {
+        $scope.repositories = repoNames;
+      })
+  }
+})
+.factory('GithubService', function($http){
+  var service = {
+    getRepos: function(username) {
+      return $http.get('https://api.github.com/users/'+username+'/repos')
+        .then(function(response) {
+          return response.data;
+        })
+    },
+    getRepoNames: function(username) {
+      return service.getRepos(username)
+      .then(function(data){
+        return data.map(function(item) {
+          return item.name;
+        })
+      });
+    }
+  };
+  return service;
+})
 .controller('WeatherForecastController', function($scope, $http, LocationService){
   /* URLs for the APIs:
   -> Google Geocode
