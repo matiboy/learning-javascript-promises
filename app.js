@@ -46,7 +46,7 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
   };
   return service;
 })
-.controller('WeatherForecastController', function($scope, $http, LocationService){
+.controller('WeatherForecastController', function($scope, $http, LocationService, $q){
   /* URLs for the APIs:
   -> Google Geocode
   var url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+geo.coords.latitude+','+geo.coords.longitude;
@@ -57,11 +57,22 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
   */
   LocationService.getGeolocation()
     .then(function(geo) {
+      return {
+        coords: {
+          latitude: 0,
+          longitude: 0
+        }
+      }
+    })
+    .then(function(geo) {
         $scope.latlng = geo.coords.latitude + ', ' + geo.coords.longitude;
         var url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+geo.coords.latitude+','+geo.coords.longitude;
         return $http.get(url);
     })
     .then(function(response) {
+      if(response.data.status === 'ZERO_RESULTS') {
+        throw 'Error: no good';
+      }
         var data = response.data;
         var result = data.results[0];
         var components = result.address_components;
@@ -83,6 +94,8 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
     }).then(function(response){
         $scope.weather = response.data[0].WeatherText;
         $scope.temperature = response.data[0].Temperature.Metric.Value;
+    }).catch(function(message) {
+      window.alert(message);
     });
 })
 .controller('LocationController', function($scope, LocationService){
