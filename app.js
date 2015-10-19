@@ -27,8 +27,29 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
       })
   }
 })
+.controller('GithubRepoAvailabilityController', function($scope, GithubService) {
+  $scope.checkRepoAvailability = function() {
+    GithubService.checkRepoAvailability($scope.username, $scope.repository)
+      .then(function(status) {
+        $scope.status = status;
+      }).catch(function(status) {
+        $scope.status = 'An error has occurred '+status;
+      })
+  }
+})
 .factory('GithubService', function($http){
   var service = {
+    checkRepoAvailability: function(username, repoName) {
+      return $http.get('https://api.github.com/repos/'+username+'/'+repoName)
+        .then(function(response){
+          return 'Not available';
+        })
+        .catch(function(response) {
+          if(response.status === 404) {
+            return 'Available';
+          }
+        })
+    },
     getRepos: function(username) {
       return $http.get('https://api.github.com/users/'+username+'/repos')
         .then(function(response) {
