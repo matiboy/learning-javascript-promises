@@ -37,6 +37,22 @@ http://api.open-notify.org/iss-now.json?callback=JSON_CALLBACK
 More information about pass times:
 http://open-notify.org/Open-Notify-API/ISS-Pass-Times/
 */
+.controller('ISSController', function($scope, $http){
+    $scope.iss = {};
+    var peoplePromise = $http.jsonp('http://api.open-notify.org/astros.json?callback=JSON_CALLBACK');
+    var positionPromise = $http.jsonp('http://api.open-notify.org/iss-now.json?callback=JSON_CALLBACK');
+
+    peoplePromise.then(function(response){
+        console.log('People loaded');
+        $scope.iss.people = response.data.people;
+    });
+
+    positionPromise.then(function(response) {
+        console.log('Position loaded');
+        $scope.iss.latlng = response.data.iss_position;
+    });
+    console.debug('This will always appear first');
+})
 .controller('GithubRepoAvailabilityController', function($scope, GithubService) {
   $scope.checkRepoAvailability = function() {
     GithubService.checkRepoAvailability($scope.username, $scope.repository)
