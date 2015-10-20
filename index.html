@@ -20,6 +20,20 @@
         <p>Promises, promises, not only words...</p>
       </div>
       <div class="row">
+        <div class="col-xs-6" ng-controller="LoadtimeController">
+          <div class="panel panel-success">
+            <div class="panel-heading">API load time</div>
+            <div class="panel-body">
+              <p>Times: <input ng-model="times"></p>
+              <p>API url: <input ng-model="url"><button ng-click="check()" class="btn btn-success">Go</button>
+              </p>
+              <p>Total: <span ng-bind="duration"></span>ms</p>
+              <p>Average: <span ng-bind="average"></span>ms</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
         <div class="col-xs-12" ng-controller="VideoPlayerController">
           <div class="panel panel-success">
             <div class="panel-heading">Video player</div>

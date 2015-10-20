@@ -24,8 +24,6 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
     var playerReady = playerLoading.promise;
     $scope.status = [];
 
-    playerLoading.reject('No player');
-
     window.onPlayerEvent = function(events) {
         if(events[0].event === 'playerInit') {
             playerLoading.resolve(document.getElementById('twitch_embed_player'));
@@ -54,7 +52,7 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
         $scope.status.push('Loading video onto player');
         var player = results[0];
         var video = results[1];
-        player.loadVideo(video._id);
+        // player.loadVideo(video._id);
     }, function(message) {
         window.alert(message);
     })
