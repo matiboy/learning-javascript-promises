@@ -50,10 +50,12 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
   var cachedResults = {};
   return {
     search: function(searchTerm) {
-      return $http.jsonp('https://itunes.apple.com/search?media=movie&callback=JSON_CALLBACK&term='+searchTerm)
+      return $q.when(cachedResults[searchTerm] || $http.jsonp('https://itunes.apple.com/search?media=movie&callback=JSON_CALLBACK&term='+searchTerm)
         .then(function(response) {
+          cachedResults[searchTerm] = response.data.results;
           return response.data.results;
-        });
+        })
+      );
     }
   }
 })
