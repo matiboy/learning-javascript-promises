@@ -19,6 +19,28 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
     $scope.channels = response.data.events;
   });
 })
+.controller('LoadtimeController', function($scope, $http, $q){
+    $scope.url = 'https://api.github.com/users/matiboy/repos';
+    $scope.times = 10;
+    $scope.check = function() {
+        var start = new Date();
+        var promise;
+        for(var i=0;i<$scope.times;i++) {
+            if(!promise) {
+                promise = $http.get($scope.url);
+            } else {
+                promise = promise.then(function() {
+                    return $http.get($scope.url);
+                });
+            }
+        }
+        promise.then(function(){
+            var duration = new Date() - start;
+            $scope.duration = duration;
+            $scope.average = duration / $scope.times;
+        })
+    }
+})
 .controller('VideoPlayerController', function($scope, $q, $http) {
     var playerLoading = $q.defer();
     var playerReady = playerLoading.promise;
