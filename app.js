@@ -76,64 +76,17 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
   };
 })
 .factory('TodoService', function($q) {
-  function loadDB() {
-    var q = $q.defer();
-    var request = window.indexedDB.open("TodosDB", 1);
-    request.onupgradeneeded = function(e) {
-      var db = request.result;
-      db.createObjectStore('todos', { keyPath: "name" });
-    }
-    request.onsuccess = function(event) {
-      var db = request.result;
-      q.resolve(db);
-    };
-    return q.promise;
-  }
   var service =  {
     add: function(todo) {
-      return loadDB().then(function(db){
-        var q = $q.defer();
-        var transaction = db.transaction(["todos"], "readwrite");
-        transaction.oncomplete = function() {
-          q.resolve(todo);
-        }
-
-        transaction.onerror = function(err) {
-          q.reject(err);
-        }
-        var objectStore = transaction.objectStore("todos");
-        objectStore.add({name: todo});
-        return q.promise;
-      });
+      var todos = service.load();
+      todos.push(todo);
+      localStorage.setItem('todos', JSON.stringify(todos));
     },
     clear: function() {
-      return loadDB().then(function(db){
-        var q = $q.defer();
-        var transaction = db.transaction(["todos"], "readwrite");
-        transaction.oncomplete = q.resolve;
-        transaction.onerror = q.reject;
-        var objectStore = transaction.objectStore("todos");
-        objectStore.clear();
-        return q.promise;
-      });
+        localStorage.removeItem('todos');
     },
     load: function() {
-      // return;
-      return loadDB().then(function(db){
-        var q = $q.defer();
-        var data = [];
-        var objectStore = db.transaction(['todos']).objectStore('todos');
-        objectStore.openCursor().onsuccess = function(event) {
-          var cursor = event.target.result;
-          if(cursor){
-            data.push(cursor.value.name);
-            cursor.continue();
-          } else {
-            q.resolve(data);
-          }
-        };
-        return q.promise;
-      });
+      return JSON.parse(localStorage.getItem('todos')) || [];
     }
   };
   return service;
