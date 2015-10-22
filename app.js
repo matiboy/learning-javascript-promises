@@ -164,14 +164,14 @@ http://open-notify.org/Open-Notify-API/ISS-Pass-Times/
     });
 })
 .controller('GithubRepoAvailabilityController', function($scope, GithubService) {
-  $scope.checkRepoAvailability = function() {
-    GithubService.checkRepoAvailability($scope.username, $scope.repository)
-      .then(function(status) {
-        $scope.status = status;
-      }).catch(function(status) {
-        $scope.status = 'An error has occurred '+status;
-      })
-  }
+    $scope.checkRepoAvailability = function() {
+        $scope.status = 'Checking';
+        GithubService.checkRepoAvailability($scope.username, $scope.repository).then(function(status){
+            $scope.status = status;
+        }).catch(function(status) {
+            $scope.status = 'An error has occurred: ' + status;
+        });
+    };
 })
 .factory('GithubService', function($http){
   var service = {
@@ -252,16 +252,6 @@ http://open-notify.org/Open-Notify-API/ISS-Pass-Times/
         });
     };
 })
-.controller('GithubRepoAvailabilityController', function($scope, GithubService) {
-    $scope.checkRepoAvailability = function() {
-        $scope.status = 'Checking';
-        GithubService.checkRepoAvailability($scope.username, $scope.repository).then(function(status) {
-            $scope.status = status;
-        }, function(reason) {
-            $scope.status = 'An error has occurred: ' + reason;
-        });
-    };
-})
 .controller('LocationController', function($scope, LocationService){
   LocationService.getGeolocation().then(function geolocationReceived(geoposition) {
     $scope.coordinates = geoposition.coords;
@@ -276,7 +266,7 @@ http://open-notify.org/Open-Notify-API/ISS-Pass-Times/
       return getGeolocation();
     }
   };
-});
+}).controller('TvController', function(){});
 document.addEventListener("DOMContentLoaded", function(event) {
   var address = document.getElementById('address');
   getGeolocation().then(function(geolocation){
