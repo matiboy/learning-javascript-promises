@@ -173,7 +173,7 @@ http://open-notify.org/Open-Notify-API/ISS-Pass-Times/
         });
     };
 })
-.factory('GithubService', function($http){
+.factory('GithubService', function($http, $q){
   var service = {
     checkRepoAvailability: function(username, repoName) {
       return $http.get('https://api.github.com/repos/'+username+'/'+repoName)
@@ -184,6 +184,7 @@ http://open-notify.org/Open-Notify-API/ISS-Pass-Times/
           if(response.status === 404) {
             return 'Available';
           }
+          return $q.reject(response.status);
         })
     },
     getRepos: function(username) {
