@@ -11,7 +11,34 @@ function getGeolocation() {
   return geolocationPromise;
 }
 
-angular.module('SmashBoard', [])
+angular.module('SmashBoard', []).controller('TvController', function($scope, $http) {
+  var now = Math.floor(new Date().getTime() / 1000);
+  var url = 'http://companionapi.pink.cat/epgapi/singleslot/'+now+'?channels=[1,159,63,64]&format=json&o=1'
+  var ajaxPromise = $http.get(url);
+  ajaxPromise.then(function weGotData(response) {
+    $scope.channels = response.data.events;
+  });
+})
+.controller('LoadtimeController', function($scope, $http, $q){
+    $scope.url = 'https://api.github.com/users/matiboy/repos';
+    $scope.times = 10;
+    var start = new Date();
+    var promise;
+    for(var i=0;i<$scope.times;i++) {
+        if(!promise) {
+            promise = $http.get($scope.url);
+        } else {
+            promise = promise.then(function() {
+                return $http.get($scope.url);
+            });
+        }
+    }
+    promise.then(function(){
+        var duration = new Date() - start;
+        $scope.duration = duration;
+        $scope.average = duration / $scope.times;
+    });
+})
 .controller('ITunesController', function($scope, ITunesService) {
   $scope.check = function() {
     ITunesService.search($scope.searchTerm).then(function(results) {
