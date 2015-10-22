@@ -266,7 +266,7 @@ http://open-notify.org/Open-Notify-API/ISS-Pass-Times/
       return getGeolocation();
     }
   };
-}).controller('TvController', function(){});
+});
 document.addEventListener("DOMContentLoaded", function(event) {
   var address = document.getElementById('address');
   getGeolocation().then(function(geolocation){
