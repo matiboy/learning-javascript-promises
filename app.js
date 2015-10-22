@@ -78,15 +78,18 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
 .factory('TodoService', function($q) {
   var service =  {
     add: function(todo) {
-      var todos = service.load();
-      todos.push(todo);
-      localStorage.setItem('todos', JSON.stringify(todos));
+      return service.load().then(function(oldData) {
+        oldData.push(todo);
+        localStorage.setItem('todos', JSON.stringify(oldData));
+        return todo;
+      })
     },
     clear: function() {
-        localStorage.removeItem('todos');
+      return $q.when(localStorage.removeItem('todos'));
     },
     load: function() {
-      return JSON.parse(localStorage.getItem('todos')) || [];
+      var data = localStorage.getItem('todos');
+      return $q.when(JSON.parse(data) || []);
     }
   };
   return service;
