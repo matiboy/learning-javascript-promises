@@ -107,7 +107,6 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
       });
     },
     clear: function() {
-      localStorage.removeItem('todos');
       return loadDB().then(function(db){
         var q = $q.defer();
         var transaction = db.transaction(["todos"], "readwrite");
