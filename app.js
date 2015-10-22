@@ -73,7 +73,7 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
       localStorage.setItem('todos', JSON.stringify(todos));
     },
     clear: function() {
-      localStorage.delItem('todos');
+      localStorage.removeItem('todos');
     },
     load: function() {
       return JSON.parse(localStorage.getItem('todos')) || [];
