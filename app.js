@@ -102,6 +102,49 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
     tag.src = "https://www.youtube.com/iframe_api";
     var firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    var apiLoading = $q.defer();
+    var apiReady = apiLoading.promise;
+
+    window.onYouTubeIframeAPIReady = apiLoading.resolve;
+
+    var videoPlayer;
+    window.onPlayerStateChange = function(event) {
+        if(event.data === YT.PlayerState.UNSTARTED) {
+            videoPlayer = $q.defer();
+            videoPlayer.promise.then(function() {
+                $scope.status = 'Video is complete, try another one';
+            })
+        } else if(event.data === YT.PlayerState.ENDED) {
+            videoPlayer.resolve();
+        } else if(event.data === YT.PlayerState.PLAYING) {
+            $scope.status = 'Playing';
+        } else if(event.data === YT.PlayerState.PAUSED) {
+            $scope.status = 'Paused';
+        }
+        try {
+            $scope.$digest();
+        }catch(e){}
+    };
+
+    apiReady.then(function() {
+        $scope.status = 'API is ready';
+        var playerReady = $q.defer();
+        playerReady.promise.then(function(player) {
+          $scope.status = 'Player is ready!';
+        });
+        var player = new YT.Player('twitch_embed_player', {
+          height: '390',
+          width: '640',
+          videoId: 'M7lc1UVf-VE',
+          events: {
+            'onReady': function() {
+                playerReady.resolve(player);
+            },
+            'onStateChange': onPlayerStateChange
+          }
+        });
+    });
 })
 .controller('RepositoriesController', function($scope, GithubService) {
   $scope.getUserRepos = function() {
