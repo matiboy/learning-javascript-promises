@@ -46,6 +46,50 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
   var distance = document.getElementById('racetrack').scrollWidth - 121;
   var result = document.getElementById('result');
   var resultCar = document.getElementById('resultCar');
+  function race(resolve, reject) {
+    var car = this;
+    car.reject = reject;
+    car.interval = setInterval(function() {
+      var moveBy = 1.2 + 2.5*Math.random();
+      var current = parseInt(car.style.transform.split('(')[1].split(',')[0]);
+      var newPos = current + moveBy;
+      car.style.transform = 'translate3d('+ newPos + 'px,0,0)';
+      if(newPos > distance) {
+        resolve(car);
+      }
+    }, 10)
+  }
+  function reset() {
+    // Reset the cars
+    cars.forEach(function(car) {
+      car.style.transform = 'translate3d(0,0,0)';
+    });
+    result.style.display = 'none';
+  }
+
+  var cars = [car1, car2, car3];
+  $scope.start = function() {
+    reset();
+    var races = cars.map(function(car) {
+      var carRace = new Promise(race.bind(car));
+      carRace.then(function(){
+        console.log(car.id + ' completed');
+      }, function() {
+        console.log(car.id + ' lost!');
+      });
+      return carRace;
+    });
+    Promise.race(races)
+      .then(function(winningCar) {
+        cars.forEach(function(car){
+          car.reject();
+          clearInterval(car.interval);
+        });
+        result.style.display = 'block';
+        resultCar.setAttribute('src', winningCar.id+'.jpg');
+        console.log('Race is over');
+      })
+  }
 })
 .controller('ITunesController', function($scope, ITunesService) {
   $scope.check = function() {
