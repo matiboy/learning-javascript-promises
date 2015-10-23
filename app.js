@@ -96,42 +96,12 @@ angular.module('SmashBoard', []).controller('TvController', function($scope, $ht
 
 })
 .controller('VideoPlayerController', function($scope, $q, $http) {
-    var playerLoading = $q.defer();
-    var playerReady = playerLoading.promise;
-    $scope.status = [];
+    // Add the script itself
+    var tag = document.createElement('script');
 
-    window.onPlayerEvent = function(events) {
-        if(events[0].event === 'playerInit') {
-            playerLoading.resolve(document.getElementById('twitch_embed_player'));
-        }
-    }
-
-    swfobject.embedSWF("//www-cdn.jtvnw.net/swflibs/TwitchPlayer.swf", "twitch_embed_player", "640", "400", "11", null,
-      { "eventsCallback":"onPlayerEvent",
-        "embed":1,
-        "auto_play":"true"},
-      { "allowScriptAccess":"always",
-        "allowFullScreen":"true"}
-    );
-
-    playerReady.then(function(player) {
-        $scope.status.push('Player is ready');
-    });
-
-    var videoId = $http.jsonp('https://api.twitch.tv/kraken/videos/top?game=Gaming+Talk+Shows&period=month&callback=JSON_CALLBACK')
-        .then(function(response) {
-            $scope.status.push('Videos loaded');
-            return response.data.videos[0];
-        });
-
-    $q.all([playerReady, videoId]).then(function(results) {
-        $scope.status.push('Loading video onto player');
-        var player = results[0];
-        var video = results[1];
-        // player.loadVideo(video._id);
-    }, function(message) {
-        window.alert(message);
-    })
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 })
 .controller('RepositoriesController', function($scope, GithubService) {
   $scope.getUserRepos = function() {
