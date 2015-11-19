@@ -1,7 +1,8 @@
 ## Learning Javascript Promises
 
 This is the source code companion for the [Learning Javascript Promises: Practical applications in ES6 and AngularJS](https://www.packtpub.com/web-development/learning-javascript-promises-practical-applications-es6-and-angularjs-video)
-![Learning Javascript Promises](https://dz13w8afd47il.cloudfront.net/sites/default/files/imagecache/ppv4_main_book_cover/bookretailers/9781784391355_0.jpg)
+
+<img src="https://dz13w8afd47il.cloudfront.net/sites/default/files/imagecache/ppv4_main_book_cover/bookretailers/9781784391355_0.jpg" style="width: 100px">
 
 ## Code bundles
 
