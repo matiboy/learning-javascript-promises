@@ -1,130 +1,249 @@
-<!DOCTYPE html>
 <html>
-
   <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="description" content="Learning-javascript-promises : This is the source code companion for the Learning Javascript Promises: Practical applications in ES6 and AngularJS">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <style>
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.0/lodash.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.13.0/ui-bootstrap-tpls.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
+    <script src="app.js"></script>
+    <link href="app.css" rel="stylesheet"></link>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+      ga('create', 'UA-67695830-1', 'auto');
+      ga('send', 'pageview');
 
-    <title>Learning-javascript-promises</title>
+    </script>
   </head>
-
-  <body>
-
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/matiboy/learning-javascript-promises">View on GitHub</a>
-
-          <h1 id="project_title">Learning-javascript-promises</h1>
-          <h2 id="project_tagline">This is the source code companion for the Learning Javascript Promises: Practical applications in ES6 and AngularJS</h2>
-
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/matiboy/learning-javascript-promises/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/matiboy/learning-javascript-promises/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
+  <body ng-app="SmashBoard">
+    <div class="container">
+      <div class="jumbotron">
+        <h1>SmashBoard</h1>
+        <p>Promises, promises, not only words...</p>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="panel panel-success">
+            <div class="panel-heading">Race to the finish line! <b style="float: right;">Use Promise.race to track the first completed promise in an array</b></div>
+            <div class="panel-body" ng-controller="RaceController">
+              <p><button ng-click="start()" class="btn btn-success">Go</button>
+              </p>
+              <div id="racetrack">
+                <div class="racecar" id="car1"></div>
+                <div class="racecar" id="car2"></div>
+                <div class="racecar" id="car3"></div>
+                <div id="result">
+                  <p>Winner: </p>
+                  <img id="resultCar" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-6" ng-controller="ITunesController">
+          <div class="panel panel-success">
+            <div class="panel-heading">iTunes search <b style="float: right;">Using $q.when for caching</b></div>
+            <div class="panel-body">
+              <p>Search term: <input ng-model="searchTerm"><button ng-click="check()" class="btn btn-success">Go</button>
+              </p>
+              <ul>
+                <li ng-repeat="result in results">
+                  <img ng-src="{{result.artworkUrl100}}"> <span ng-bind="result.trackName"></span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-6" ng-controller="TodoController">
+          <div class="panel panel-success">
+            <div class="panel-heading">Todo list <b style="float: right;">Using $q.when to fake async actions</b></div>
+            <div class="panel-body">
+              <p>
+                <input ng-model="what">
+                <button ng-click="add()" class="btn btn-success">Add</button>
+                <button ng-click="clear()" class="btn btn-warning">Clear</button>
+              </p>
+              <ul>
+                <li ng-repeat="todo in todos" ng-bind="todo"></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-6" ng-controller="LoadtimeController">
+          <div class="panel panel-success">
+            <div class="panel-heading">API load time <b style="float: right;">Chain a varying number of promises</b></div>
+            <div class="panel-body">
+              <p>Times: <input ng-model="times"></p>
+              <p>API url: <input ng-model="url"><button ng-click="check()" class="btn btn-success">Go</button>
+              </p>
+              <p>Total: <span ng-bind="duration"></span>ms</p>
+              <p>Average: <span ng-bind="average"></span>ms</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12" ng-controller="VideoPlayerController">
+          <div class="panel panel-success">
+            <div class="panel-heading">Video player <b style="float: right;">Use $q.all or Promise.all to wait for several processes in parallel</b></div>
+            <div class="panel-body">
+              <div id="twitch_embed_player"></div>
+              <p ng-bind="status"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-6" ng-controller="GithubRepoAvailabilityController">
+          <div class="panel panel-success">
+            <div class="panel-heading">Check Github repo availability <b style="float: right;">Make failures into success</b></div>
+            <div class="panel-body">
+              <p>Username: <input ng-model="username" /></p>
+              <p>Repository: <input ng-model="repository" /><button class="btn btn-info" ng-click="checkRepoAvailability()">Go</button>
+              <p>
+                <span ng-bind="status"></span>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-6" ng-controller="ISSController">
+          <div class="panel panel-success">
+            <div class="panel-heading">International Space Station info <b style="float: right;">Run async actions in parallel independently</b></div>
+            <div class="panel-body" id="iss">
+              <div class="row">
+                <div class="col-xs-6">
+                  <p>There are currently <span ng-bind="iss.people.length"></span> people in space:</p>
+                  <ul>
+                    <li ng-repeat="person in iss.people">
+                      <span ng-bind="person.name"></span> (<span ng-bind="person.craft"></span>)
+                    </li>
+                  </ul>
+                </div>
+                <div class="col-xs-6">
+                  <p>The ISS is currently at latitude <span ng-bind="iss.latlng.latitude"></span> and longitude <span ng-bind="iss.latlng.longitude"></span></p>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-6" ng-controller="WeatherForecastController">
+          <div class="panel panel-success">
+            <div class="panel-heading">Weather forecast <b style="float: right;">Chaining promises to build async flows</b></div>
+            <div class="panel-body">
+              <p>Latlng: <span ng-bind="latlng"></span></p>
+              <p>City: <span ng-bind="city"></span></p>
+              <p>Weather: <span ng-bind="weather"></span></p>
+              <p>Temperature: <span ng-bind="temperature"></span></p>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-6" ng-controller="RepositoriesController">
+          <div class="panel panel-success">
+            <div class="panel-heading">Github repositories <b style="float: right;">Preparing data before passing it on in a flow</b></div>
+            <div class="panel-body">
+              <p>Username: <input ng-model="username" /><button class="btn btn-info" ng-click="getUserRepos()">Go</button></p>
+              <p>Repositories:
+                <ul>
+                  <li ng-repeat="repo in repositories" ng-bind="repo"></li>
+                </ul>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-6">
+          <div class="panel panel-success">
+            <div class="panel-heading">Location <b style="float: right;">Resolving promises</b></div>
+            <div class="panel-body">
+              <p>Address: <span id="address"></span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-6">
+          <div class="panel panel-success">
+            <div class="panel-heading">Battery status <b style="float: right;">ES6 promises are here!</b></div>
+            <div class="panel-body">
+              <p>Charging: <span id="charging"></span></p>
+              <p>Level: <i id="battery-level"></i></p>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-6">
+          <div class="panel panel-success">
+            <div class="panel-heading">World cities <b style="float: right;">Promises only resolve once</b></div>
+            <div class="panel-body">
+              <p><input id="city-input"></p>
+              <p>City: <span id="city-name"></span></p>
+              <p>Load time: <span id="load-time"></span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-6">
+          <div class="panel panel-success">
+            <div class="panel-heading">Talk to me <b style="float: right;">Promises pass a single resolution value to their callbacks</b></div>
+            <div class="panel-body">
+              <input id="say-what">
+              <p>Status: <span id="status"></span></p>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-6">
+          <div class="panel panel-success">
+            <div class="panel-heading">The 5 seconds challenge <b style="float: right;">Promises can only resolve or reject, not both</b></div>
+            <div class="panel-body">
+              <button id="click-me" class="btn btn-success">Click me</button>
+              <p>Last attempt: <span id="last"></span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-6">
+          <div class="panel panel-success" ng-controller="TvController">
+            <div class="panel-heading">Now playing on satellite TV <b style="float: right;">You've actually probably have been using promises before!</b></div>
+            <div class="panel-body" ng-if="!channels.length">I'm not sure boss</div>
+            <div class="panel-body" ng-if="channels.length">
+              <ul>
+                <li ng-repeat="c in channels">
+                  <h3 ng-bind="c.name"></h3>
+                  <p>Channel #<span ng-bind="c.service_id"></span></p>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-6">
+          <div class="panel panel-success" ng-controller="LocationController">
+            <div class="panel-heading">Location</div>
+            <div class="panel-body">
+              <p>
+                <b>Latitude:</b> <span ng-bind="coordinates.latitude">
+              </p>
+              <p>
+                <b>Longitude:</b> <span ng-bind="coordinates.longitude">
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <h2>
-<a id="learning-javascript-promises" class="anchor" href="#learning-javascript-promises" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Learning Javascript Promises</h2>
-
-<p>This is the source code companion for the <a href="https://www.packtpub.com/web-development/learning-javascript-promises-practical-applications-es6-and-angularjs-video">Learning Javascript Promises: Practical applications in ES6 and AngularJS</a></p>
-
-<h2>
-<a id="code-bundles" class="anchor" href="#code-bundles" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Code bundles</h2>
-
-<p>Here are all the code bundles for the course (also available in your Packt account)</p>
-
-<h3>
-<a id="section-1-introducing-promises-start---end" class="anchor" href="#section-1-introducing-promises-start---end" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Section 1: Introducing promises <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/s1initial.zip">Start</a> - <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/s1final.zip">End</a>
-</h3>
-
-<ul>
-<li>Video 2: Promises: You've been using them all along <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/s1v2.zip">Start</a> - <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/after_s1v2.zip">End</a>
-</li>
-<li>Video 3: Make me a promise <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/s1v3.zip">Start</a> - <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/after_s1v3.zip">End</a>
-</li>
-</ul>
-
-<h3>
-<a id="section-2-resolving-and-rejecting-es6-promises-start---end" class="anchor" href="#section-2-resolving-and-rejecting-es6-promises-start---end" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Section 2: Resolving and Rejecting ES6 promises <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/s2initial.zip">Start</a> - <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/s2final.zip">End</a>
-</h3>
-
-<ul>
-<li>Video 1: Creating ES6 Promises <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/s2v1.zip">Start</a> - <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/after_s2v1.zip">End</a>
-</li>
-<li>Video 2: There are only two types of promises in this world... <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/s2v2.zip">Start</a> - <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/after_s2v2.zip">End</a>
-</li>
-<li>Video 3: Deciding what's next <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/s2v3.zip">Start</a> - <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/after_s2v3.zip">End</a>
-</li>
-<li>Video 4: No second chance <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/s2v4.zip">Start</a> - <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/after_s2v4.zip">End</a>
-</li>
-<li>Video 5: Callbacks execution and timing <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/s2v5.zip">Start</a> - <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/after_s2v5.zip">End</a>
-</li>
-<li>Video 6: The future is coming: Angular v2 Promises <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/s2v6.zip">Start</a> - <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/after_s2v6.zip">End</a>
-</li>
-</ul>
-
-<h3>
-<a id="section-3-one-mans-garbage-is-another-mans-gold-start---end" class="anchor" href="#section-3-one-mans-garbage-is-another-mans-gold-start---end" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Section 3: One Man's garbage is another Man's gold <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/s3initial.zip">Start</a> - <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/s3final.zip">End</a>
-</h3>
-
-<ul>
-<li>Video 1: Chaining promises <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/s3v1.zip">Start</a> - <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/after_s3v1.zip">End</a>
-</li>
-<li>Video 2: Making API data user-ready <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/s3v2.zip">Start</a> - <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/after_s3v2.zip">End</a>
-</li>
-<li>Video 3: Changing successes into failures <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/s3v3.zip">Start</a> - <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/after_s3v3.zip">End</a>
-</li>
-<li>Video 4: Turning failure into success <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/s3v4.zip">Start</a> - <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/after_s3v4.zip">End</a>
-</li>
-</ul>
-
-<h3>
-<a id="section-4-combining-promises-start---end" class="anchor" href="#section-4-combining-promises-start---end" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Section 4: Combining Promises <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/s4initial.zip">Start</a> - <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/s4final.zip">End</a>
-</h3>
-
-<ul>
-<li>Video 1: Parallel and independent tasks <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/s4v1.zip">Start</a> - <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/after_s4v1.zip">End</a>
-</li>
-<li>Video 2: Interdependent tasks <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/s4v2.zip">Start</a> - <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/after_s4v2.zip">End</a>
-</li>
-<li>Video 3: Series flow - with a twist <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/s4v3.zip">Start</a> - <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/after_s4v3.zip">End</a>
-</li>
-</ul>
-
-<h3>
-<a id="section-5-extra-promises-start---end" class="anchor" href="#section-5-extra-promises-start---end" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Section 5: Extra Promises <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/s5initial.zip">Start</a> - <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/s5final.zip">End</a>
-</h3>
-
-<ul>
-<li>Video 1: Make it all asynchronous <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/s5v1.zip">Start</a> - <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/after_s5v1.zip">End</a>
-</li>
-<li>Video 2: The pitfall of no return <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/s5v2.zip">Start</a> - <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/after_s5v2.zip">End</a>
-</li>
-<li>Video 3: Promises vs Events <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/s5v3.zip">Start</a> - <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/after_s5v3.zip">End</a>
-</li>
-<li>Video 4: Race to the finish line <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/s5v4.zip">Start</a> - <a href="http://redape.cloudapp.net/packt/bundles/learning-promises/after_s5v4.zip">End</a>
-</li>
-</ul>
-      </section>
-    </div>
-
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Learning-javascript-promises maintained by <a href="https://github.com/matiboy">matiboy</a></p>
-        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
-
-    
-
   </body>
 </html>
